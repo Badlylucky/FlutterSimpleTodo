@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 class TodoListModel extends ChangeNotifier {
   final List<TodoItem> _todoItems = [];
 
-  List<TodoItem> get TodoItems => _todoItems;
+  List<TodoItem> get () => _todoItems;
 
   void addTodo(String title) {
     const uuid = Uuid();
