@@ -72,37 +72,45 @@ class _TodoTileState extends State<TodoTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: widget.onToggleStatus,
-      onLongPress:  _enterEditMode,
-      
+    return GestureDetector(
+      onTap: () {
+        if (!_isEditing) {
+          widget.onToggleStatus();
+        }
+      },
+      onDoubleTap: () {
+        if (!_isEditing) {
+          _enterEditMode();
+        }
+      },
       // 編集モードに応じてTextとTextFieldを切り替える
-      title: _isEditing
-          ? TextField(
-              controller: _editController,
-              focusNode: _focusNode,
-              autofocus: true,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-              ),
+      child: ListTile(  
+        title: _isEditing
+            ? TextField(
+                controller: _editController,
+                focusNode: _focusNode,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                style: TextStyle(
+                  decoration: widget.todo.isCompleted ? TextDecoration.lineThrough : null,
+                ),
+                onSubmitted: (_) => _exitEditNodeAndSave(),
+              )
+            : Text(
+              widget.todo.title,
               style: TextStyle(
                 decoration: widget.todo.isCompleted ? TextDecoration.lineThrough : null,
               ),
-              onSubmitted: (_) => _exitEditNodeAndSave(),
-            )
-          : Text(
-            widget.todo.title,
-            style: TextStyle(
-              decoration: widget.todo.isCompleted ? TextDecoration.lineThrough : null,
             ),
-          ),
-      leading: Icon(
-        Icons.lens,
-        size: 14,
+        leading: Icon(
+          Icons.lens,
+          size: 14,
+        ),
       ),
     );
   }
 }
-      
