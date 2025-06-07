@@ -12,22 +12,49 @@ class TodoListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('TODO')),
-      body: ListView.builder(
-              itemCount: todoListModel.get().length,
-              itemBuilder: (context, index) {
-                final todo = todoListModel.getByIndex(index);
-                return TodoTile( // ここでカスタムウィジェットを使用
-                  todo: todo,
-                  onToggleStatus: () => todoListModel.toggleTodoStatus(todo.id),
-                  onUpdateTitle: (newTitle) => todoListModel.updateTodoTitle(todo.id, newTitle),
-                  onDelete: () => todoListModel.removeTodo(todo.id),
-                );
-              },
+      body: ReorderableListView.builder(
+        itemCount: todoListModel.todoItems.length,
+        itemBuilder: (context, index) {
+          final todo = todoListModel.todoItems[index];
+          return Dismissible(
+            key: ValueKey(todo.id),
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 20.0),
+              child: const Icon(Icons.delete, color: Colors.white),
             ),
+            secondaryBackground: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 20.0),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            direction: DismissDirection.horizontal,
+            onDismissed: (direction) {
+              // スワイプが完了したとき、TODOを削除する
+              todoListModel.removeTodo(todo.id);
+            },
+            child: TodoTile(
+              key: ValueKey(todo.id), // Dismissibleのキーと一致させる
+              todo: todo,
+              onToggleStatus: () => todoListModel.toggleTodoStatus(todo.id),
+              onUpdateTitle: (newTitle) => todoListModel.updateTodoTitle(todo.id, newTitle),
+              onDelete: () => todoListModel.removeTodo(todo.id),
+            ),
+          );
+        },
+        onReorder: (int oldIndex, int newIndex) {
+          // todoリストの順序を更新する
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
+          }
+          todoListModel.reorderTodos(oldIndex, newIndex);
+        },
+      ),
       floatingActionButton: FloatingActionButton(onPressed: () {
           todoListModel.addTodo('test1');
           todoListModel.addTodo('test2');
-          print('add');
         },
         child: const Icon(Icons.add),
       ),

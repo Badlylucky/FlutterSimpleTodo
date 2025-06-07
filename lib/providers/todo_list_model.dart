@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 class TodoListModel extends ChangeNotifier {
   final List<TodoItem> _todoItems = [];
 
-  List<TodoItem> get () => _todoItems;
+  List<TodoItem> get todoItems => _todoItems;
 
   void addTodo(String title) {
     const uuid = Uuid();
@@ -35,10 +35,12 @@ class TodoListModel extends ChangeNotifier {
     }
   }
 
-  TodoItem getByIndex(int index) {
-    if (index < 0 || index >= _todoItems.length) {
-      throw RangeError.index(index, _todoItems, 'index');
+  void reorderTodos(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
     }
-    return _todoItems[index];
+    final todo = _todoItems.removeAt(oldIndex);
+    _todoItems.insert(newIndex, todo);
+    notifyListeners();
   }
 }
