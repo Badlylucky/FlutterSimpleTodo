@@ -77,6 +77,8 @@ class _TodoTileState extends State<TodoTile> {
         if (!_isEditing) {
           widget.onToggleStatus();
         }
+        // 上位のonTapイベントを発火させる
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       onDoubleTap: () {
         if (!_isEditing) {
@@ -98,7 +100,10 @@ class _TodoTileState extends State<TodoTile> {
                 style: TextStyle(
                   decoration: widget.todo.isCompleted ? TextDecoration.lineThrough : null,
                 ),
-                onSubmitted: (_) => _exitEditNodeAndSave(),
+                onSubmitted: (_) {
+                  _focusNode.unfocus();
+                  _exitEditNodeAndSave();
+                },
               )
             : Text(
               widget.todo.title,
