@@ -36,8 +36,8 @@ class TodoListModel extends ChangeNotifier {
   }
 
   void reorderTodos(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
+    if (newIndex < 0 || newIndex >= _todoItems.length) {
+      return; // 無効なインデックスの場合は何もしない
     }
     final todo = _todoItems.removeAt(oldIndex);
     _todoItems.insert(newIndex, todo);
