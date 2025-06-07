@@ -26,4 +26,19 @@ class TodoListModel extends ChangeNotifier {
     _todoItems.removeWhere((todo) => todo.id == id);
     notifyListeners();
   }
+
+  void updateTodoTitle(String id, String newTitle) {
+    final index = _todoItems.indexWhere((todo) => todo.id == id);
+    if (index != -1) {
+      _todoItems[index] = _todoItems[index].updateTitle(newTitle);
+      notifyListeners();
+    }
+  }
+
+  TodoItem getByIndex(int index) {
+    if (index < 0 || index >= _todoItems.length) {
+      throw RangeError.index(index, _todoItems, 'index');
+    }
+    return _todoItems[index];
+  }
 }

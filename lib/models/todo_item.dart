@@ -20,4 +20,8 @@ class TodoItem {
   TodoItem toggle() {
     return TodoItem(id: id, title: title, isCompleted: !isCompleted);
   }
+
+  TodoItem updateTitle(String newTitle) {
+    return TodoItem(id: id, title: newTitle, isCompleted: isCompleted);
+  }
 }
