@@ -24,5 +24,6 @@ class TodoListModel extends ChangeNotifier {
 
   void removeTodo(String id) {
     _todoItems.removeWhere((todo) => todo.id == id);
+    notifyListeners();
   }
 }
