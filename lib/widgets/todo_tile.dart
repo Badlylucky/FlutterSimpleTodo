@@ -102,10 +102,6 @@ class _TodoTileState extends State<TodoTile> {
         Icons.lens,
         size: 14,
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: widget.onDelete,
-      ),
     );
   }
 }
