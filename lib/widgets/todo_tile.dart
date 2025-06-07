@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studying_flutter/models/todo_item.dart';
+import 'package:studying_flutter/providers/todo_list_model.dart';
 
 class TodoTile extends StatefulWidget {
   final TodoItem todo;
+  final bool isInitiallyEditing; // 初期状態で編集モードにするか
   final VoidCallback onToggleStatus;
   final ValueChanged<String> onUpdateTitle;
   final VoidCallback onDelete;
@@ -13,6 +16,7 @@ class TodoTile extends StatefulWidget {
     required this.onToggleStatus,
     required this.onUpdateTitle,
     required this.onDelete,
+    this.isInitiallyEditing = false,
   });
 
   @override
@@ -30,12 +34,36 @@ class _TodoTileState extends State<TodoTile> {
     _editController = TextEditingController(text: widget.todo.title);
     _focusNode = FocusNode();
 
+    // 初期状態で編集モードにする
+    if (widget.isInitiallyEditing) {
+      _isEditing = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _focusNode.requestFocus();
+        // テキストの末尾にカーソルを移動
+        _editController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _editController.text.length),
+        );
+      });
+    }
+
     // フォーカスが外れたときに編集モードを終了し、タイトルを更新する
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus && _isEditing) {
         _exitEditNodeAndSave();
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant TodoTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isInitiallyEditing && !_isEditing) {
+      _enterEditMode();
+    }
+    // TODOアイテムの内容（タイトル）が変わった場合は、コントローラも更新
+    if (oldWidget.todo.title != widget.todo.title && !_isEditing) {
+        _editController.text = widget.todo.title;
+    }
   }
 
   @override
@@ -62,12 +90,15 @@ class _TodoTileState extends State<TodoTile> {
 
   // 編集モードを終了し、タイトルを更新する
   void _exitEditNodeAndSave() {
-    if (_editController.text.isNotEmpty && _editController.text != widget.todo.title) {
+    if (_editController.text != widget.todo.title) {
       widget.onUpdateTitle(_editController.text);
     }
     setState(() {
       _isEditing = false;
     });
+
+    // 編集終了時に、TodoListModelのeditingTodoIdをクリアする
+    Provider.of<TodoListModel>(context, listen: false).setEditingTodoId(null);
   }
 
   @override

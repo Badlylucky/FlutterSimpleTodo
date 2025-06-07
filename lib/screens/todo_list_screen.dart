@@ -43,6 +43,7 @@ class TodoListScreen extends StatelessWidget {
               child: TodoTile(
                 key: ValueKey(todo.id), // Dismissibleのキーと一致させる
                 todo: todo,
+                isInitiallyEditing: todo.id == todoListModel.editingTodoId,
                 onToggleStatus: () => todoListModel.toggleTodoStatus(todo.id),
                 onUpdateTitle: (newTitle) => todoListModel.updateTodoTitle(todo.id, newTitle),
                 onDelete: () => todoListModel.removeTodo(todo.id),
@@ -59,9 +60,8 @@ class TodoListScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
-          todoListModel.addTodo('test1');
-          todoListModel.addTodo('test2');
           FocusManager.instance.primaryFocus?.unfocus();
+          todoListModel.addEmptyuTodoAndSetEditing();
         },
         child: const Icon(Icons.add),
       ),
