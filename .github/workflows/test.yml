@@ -11,10 +11,11 @@ jobs:
     name: run `flluter test` and `flutter analyze`
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v3
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.0'
+          channel: 'stable'
+          flutter-version-file: pubspec.yaml
       - name: Install dependencies
         run: flutter pub get
       - name: Run Linter
