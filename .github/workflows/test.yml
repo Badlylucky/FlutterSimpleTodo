@@ -1,0 +1,23 @@
+name: Run Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  test:
+    name: run `flluter test` and `flutter analyze`
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v3
+        with:
+          flutter-version: '3.32.0'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Run Linter
+        run: flutter analyze
+      - name: Run tests
+        run: flutter test
