@@ -61,7 +61,7 @@ class TodoListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
           FocusManager.instance.primaryFocus?.unfocus();
-          todoListModel.addEmptyuTodoAndSetEditing();
+          todoListModel.addEmptyTodoAndSetEditing();
         },
         child: const Icon(Icons.add),
       ),

@@ -16,7 +16,7 @@ class TodoListModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  TodoItem addEmptyuTodoAndSetEditing() {
+  TodoItem addEmptyTodoAndSetEditing() {
     const uuid = Uuid();
     final newTodo = TodoItem(id: uuid.v7(), title: '');
     _todoItems.add(newTodo);
